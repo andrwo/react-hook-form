@@ -34,6 +34,12 @@ export type OnSubmit<FormValues extends FieldValues> = (
   event: React.BaseSyntheticEvent,
 ) => void | Promise<void>;
 
+export type OnSubmitFailed<FormValues extends FieldValues> = (
+  errors: Partial<Record<FieldName<FormValues>, FieldError>>,
+  data: FormValues,
+  event: React.BaseSyntheticEvent,
+) => void | Promise<void>;
+
 export type SchemaValidateOptions = Partial<{
   strict: boolean;
   abortEarly: boolean;

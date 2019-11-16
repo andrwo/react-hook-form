@@ -35,6 +35,7 @@ import {
   ValidationOptions,
   SubmitPromiseResult,
   OnSubmit,
+  OnSubmitFailed,
   ValidationPayload,
   ElementLike,
   NameProp,
@@ -800,9 +801,10 @@ export default function useForm<FormValues extends FieldValues = FieldValues>({
     }
   }
 
-  const handleSubmit = (callback: OnSubmit<FormValues>) => async (
-    e: React.BaseSyntheticEvent,
-  ): Promise<void> => {
+  const handleSubmit = (
+    callback: OnSubmit<FormValues>,
+    callbackFailed?: OnSubmitFailed<FormValues>,
+  ) => async (e: React.BaseSyntheticEvent): Promise<void> => {
     if (e) {
       e.preventDefault();
       e.persist();
@@ -895,6 +897,9 @@ export default function useForm<FormValues extends FieldValues = FieldValues>({
         }
 
         errorsRef.current = fieldErrors;
+        if (callbackFailed) {
+          await callbackFailed(fieldErrors, combineFieldValues(fieldValues), e);
+        }
       }
     } finally {
       if (!isUnMount.current) {
